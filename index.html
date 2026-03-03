@@ -1,180 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>For Someone Special 💖</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Someone Special ❤️</title>
 
 <style>
 body {
   margin: 0;
-  height: 100vh;
+  padding: 0;
   overflow: hidden;
-  font-family: 'Poppins', sans-serif;
+  background: black;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
 
-/* Background Video */
-.bg-video {
+video {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -2;
 }
 
-/* Dark overlay */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.3);
-  z-index: -1;
+  background: rgba(0,0,0,0.4);
 }
 
-/* Card */
-.card {
-  position: relative;
-  z-index: 1;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: transparent;
-  text-align: center;
-}
-
-h1 {
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   color: white;
-  font-size: 42px;
-  margin-bottom: 30px;
 }
 
 button {
-  padding: 12px 30px;
+  padding: 15px 30px;
+  margin: 10px;
   font-size: 18px;
   border: none;
   border-radius: 30px;
-  margin: 10px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-#yes {
+#yesBtn {
+  background: #ff4081;
+  color: white;
+}
+
+#noBtn {
   background: white;
-  color: #7d5b61;
-}
-
-#no {
-  position: absolute;
-  background: #222;
-  color: white;
-}
-
-button:hover {
-  transform: scale(1.1);
-}
-
-/* Floating Hearts */
-.heart {
-  position: absolute;
-  color: white;
-  animation: float 6s linear infinite;
-  z-index: 0;
-}
-
-@keyframes float {
-  0% { transform: translateY(100vh); opacity: 1; }
-  100% { transform: translateY(-10vh); opacity: 0; }
-}
-
-.hidden {
-  display: none;
+  color: black;
+  position: relative;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Proposal Background Video -->
-<video id="proposalVideo" autoplay muted loop playsinline class="bg-video">
-  <source src="./proposal.mp4" type="video/mp4">
+<!-- Proposal Video (default visible) -->
+<video id="proposalVideo" autoplay muted loop playsinline>
+  <source src="proposal.mp4" type="video/mp4">
 </video>
 
-<!-- Celebration Background Video -->
-<video id="celebrationVideo" muted loop playsinline class="bg-video hidden">
-  <source src="./celebration.mp4" type="video/mp4">
+<!-- Celebration Video (hidden initially) -->
+<video id="celebrationVideo" style="display:none;" loop playsinline>
+  <source src="celebration.mp4" type="video/mp4">
 </video>
 
 <div class="overlay"></div>
 
-<div class="card">
-  <h1>Will you be mine? 💕</h1>
-  <button id="yes">Yes 💖</button>
-  <button id="no">No 😜</button>
+<div class="content">
+  <h1>Will You Be Mine Forever? ❤️</h1>
+  <button id="yesBtn">YES 💍</button>
+  <button id="noBtn">NO 😜</button>
 </div>
 
 <script>
 const proposalVideo = document.getElementById("proposalVideo");
 const celebrationVideo = document.getElementById("celebrationVideo");
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
 
-/* Force autoplay (for GitHub Pages reliability) */
+// Default state → Proposal video plays
 proposalVideo.play().catch(() => {});
 
-/* YES BUTTON */
-yesBtn.addEventListener("click", function () {
+// YES condition
+yesBtn.addEventListener("click", function() {
+    // Stop proposal
+    proposalVideo.pause();
+    proposalVideo.style.display = "none";
 
-  proposalVideo.pause();
-  proposalVideo.classList.add("hidden");
-
-  celebrationVideo.classList.remove("hidden");
-  celebrationVideo.currentTime = 0;
-  celebrationVideo.muted = false;
-  celebrationVideo.play();
-
-  document.querySelector(".card").innerHTML =
-    "<h1>Yayy! You just made Millie the happiest person alive 💖</h1>";
-
-  startConfetti();
+    // Show celebration
+    celebrationVideo.style.display = "block";
+    celebrationVideo.muted = false;
+    celebrationVideo.play();
 });
 
-/* NO BUTTON MOVE */
-noBtn.addEventListener("mouseover", function () {
-  const maxX = window.innerWidth - noBtn.offsetWidth;
-  const maxY = window.innerHeight - noBtn.offsetHeight;
-
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
+// NO button just moves (does NOT change video)
+noBtn.addEventListener("mouseover", function() {
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    noBtn.style.position = "absolute";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 });
-
-/* Floating Hearts */
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "💖";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random() * 20 + 20 + "px";
-  heart.style.animationDuration = Math.random() * 3 + 3 + "s";
-  document.body.appendChild(heart);
-
-  setTimeout(() => {
-    heart.remove();
-  }, 6000);
-}
-
-setInterval(createHeart, 500);
-
-function startConfetti() {
-  for (let i = 0; i < 80; i++) {
-    createHeart();
-  }
-}
 </script>
 
 </body>
