@@ -5,15 +5,42 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+<body>
+<!-- Proposal Background Video -->
+<video id="proposalVideo" autoplay muted loop playsinline class="bg-video">
+  <source src="proposal.mp4" type="video/mp4">
+</video>
+
+<!-- Celebration Background Video -->
+<video id="celebrationVideo" muted loop playsinline class="bg-video hidden">
+  <source src="celebration.mp4" type="video/mp4">
+</video>
+
+<div class="overlay"></div>
+</body>
+
+
 <style>
 body {
   margin: 0;
   height: 100vh;
-  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow: hidden;
 }
 
-/* Background Video */
+.card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 50px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
 .bg-video {
   position: fixed;
   top: 0;
@@ -24,34 +51,23 @@ body {
   z-index: -2;
 }
 
-/* Dark overlay */
+.hidden {
+  display: none;
+}
+
 .overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.4);
   z-index: -1;
-}
-
-/* Card */
-.card {
-  position: relative;
-  z-index: 1;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: transparent;
-  text-align: center;
 }
 
 h1 {
   color: white;
-  font-size: 42px;
-  margin-bottom: 30px;
+  font-size: 38px;
 }
 
 button {
@@ -59,7 +75,7 @@ button {
   font-size: 18px;
   border: none;
   border-radius: 30px;
-  margin: 10px;
+  margin: 15px;
   cursor: pointer;
   transition: 0.3s;
 }
@@ -73,87 +89,62 @@ button {
   position: absolute;
   background: #222;
   color: white;
+  position: absolute;
 }
 
 button:hover {
   transform: scale(1.1);
 }
 
-/* Floating Hearts */
 .heart {
   position: absolute;
   color: white;
   animation: float 6s linear infinite;
-  z-index: 0;
 }
 
 @keyframes float {
   0% { transform: translateY(100vh); opacity: 1; }
   100% { transform: translateY(-10vh); opacity: 0; }
 }
-
-.hidden {
-  display: none;
-}
 </style>
 </head>
 
 <body>
 
-<!-- Proposal Background Video -->
-<video id="proposalVideo" autoplay muted loop playsinline class="bg-video">
-  <source src="./proposal.mp4" type="video/mp4">
-</video>
-
-<!-- Celebration Background Video -->
-<video id="celebrationVideo" muted loop playsinline class="bg-video hidden">
-  <source src="./celebration.mp4" type="video/mp4">
-</video>
-
-<div class="overlay"></div>
-
 <div class="card">
   <h1>Will you be mine? 💕</h1>
-  <button id="yes">Yes 💖</button>
-  <button id="no">No 😜</button>
+  <button id="yes" onclick="yesClick()">Yes 💖</button>
+  <button id="no" onmouseover="moveNo()">No 😜</button>
 </div>
 
 <script>
-const proposalVideo = document.getElementById("proposalVideo");
-const celebrationVideo = document.getElementById("celebrationVideo");
-const yesBtn = document.getElementById("yes");
-const noBtn = document.getElementById("no");
-
-/* Force autoplay (for GitHub Pages reliability) */
-proposalVideo.play().catch(() => {});
-
-/* YES BUTTON */
-yesBtn.addEventListener("click", function () {
+function yesClick() {
+  const proposalVideo = document.getElementById("proposalVideo");
+  const celebrationVideo = document.getElementById("celebrationVideo");
 
   proposalVideo.pause();
   proposalVideo.classList.add("hidden");
 
   celebrationVideo.classList.remove("hidden");
-  celebrationVideo.currentTime = 0;
-  celebrationVideo.muted = false;
   celebrationVideo.play();
+  celebrationVideo.muted = false;
 
   document.querySelector(".card").innerHTML =
-    "<h1>Yayy! You just made Millie the happiest person alive 💖</h1>";
+    "<h1>yayy! You just made millie the happiest person alive 💖</h1>";
+}
 
-  startConfetti();
-});
-
-/* NO BUTTON MOVE */
-noBtn.addEventListener("mouseover", function () {
+function moveNo() {
+  const noBtn = document.getElementById("no");
   const maxX = window.innerWidth - noBtn.offsetWidth;
   const maxY = window.innerHeight - noBtn.offsetHeight;
 
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
-});
+  const randomX = Math.random() * maxX;
+  const randomY = Math.random() * maxY;
 
-/* Floating Hearts */
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
+}
+
 function createHeart() {
   const heart = document.createElement("div");
   heart.classList.add("heart");
@@ -163,6 +154,11 @@ function createHeart() {
   heart.style.animationDuration = Math.random() * 3 + 3 + "s";
   document.body.appendChild(heart);
 
+document.body.addEventListener("click", function () {
+  document.getElementById("proposalVideo").muted = false;
+});
+
+
   setTimeout(() => {
     heart.remove();
   }, 6000);
@@ -171,7 +167,7 @@ function createHeart() {
 setInterval(createHeart, 500);
 
 function startConfetti() {
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 100; i++) {
     createHeart();
   }
 }
@@ -179,3 +175,4 @@ function startConfetti() {
 
 </body>
 </html>
+
